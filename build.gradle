@@ -1,0 +1,47 @@
+loadConfiguration()
+
+def loadConfiguration() {
+    def environment = hasProperty('env') ? env : 'test'
+    ext.set("environment", environment)
+}
+
+buildscript { // buildscript 不能抽取出来，只能重复写。
+    ext{
+        sxGradleHome = "http://192.168.120.68/root/gradle-scripts/raw/master/"
+        suixingpayStarterVersion = "3.0.6-SNAPSHOT"
+    }
+    apply from: sxGradleHome + 'maven.gradle'
+    apply from: sxGradleHome + "spring-cloud-edgware.gradle" // 导入使用Spring Cloud及相应的Spring Boot版本号
+    apply from: sxGradleHome + 'call-hierarchy-version.gradle' // 分析服务接口调用依赖关系
+    repositories {
+        maven { url REPOSITORY_URL }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("com.suixingpay:call-hierarchy-gradle-plugin:${sxfCallHierarchyPluginVersion}")
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0"
+    }
+}
+
+subprojects {
+    // 参考 http://192.168.120.68/root/gradle-scripts
+    apply from: sxGradleHome + 'maven.gradle'
+    apply from: sxGradleHome + "spring-cloud.gradle"
+    apply from: sxGradleHome + 'call-hierarchy.gradle'
+    apply from: sxGradleHome + 'jacoco.gradle'
+    apply from: sxGradleHome + "sxp-starter-dependencies.gradle"
+
+    version = '1.0.0'
+    group = 'com.tech.omp'
+    description = '科技公司运营管理平台' // 设置描述
+
+    dependencies {
+        /*compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+        compileOnly('org.projectlombok:lombok')
+        compile("io.projectreactor:reactor-core:3.2.3.RELEASE")*/
+        compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+        compileOnly('org.projectlombok:lombok')
+        testCompile('org.projectlombok:lombok')
+        testCompile("org.springframework.boot:spring-boot-starter-test")
+    }
+}

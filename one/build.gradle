@@ -1,0 +1,22 @@
+
+bootRepackage {
+    enabled = true
+}
+callHierarchy {
+    enabled = true
+}
+version = "1.0"
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
+
+}
+bootRepackage {
+    enabled = true
+}
+callHierarchy {
+    enabled = true
+}
+springBoot {
+}
